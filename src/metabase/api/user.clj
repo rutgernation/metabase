@@ -37,7 +37,7 @@
   :visibility   :authenticated
   :feature      :email-restrict-recipients
   :type         :keyword
-  :default      :all)
+  :default      :group)
 
 (set! *warn-on-reflection* true)
 
