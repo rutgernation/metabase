@@ -131,5 +131,5 @@
   :visibility   :authenticated
   :feature      :email-restrict-recipients
   :type         :keyword
-  :default      :all
+  :default      :group
   :audit        :raw-value)
