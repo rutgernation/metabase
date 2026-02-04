@@ -102,8 +102,9 @@ export const getChartImageBlob = async (
 export const saveChartImage = async ({ fileName, ...renderOpts }: Opts) => {
   const canvas = await renderChartCanvas(renderOpts);
   if (!canvas) {
-    console.warn("No node found for selector", renderOpts.selector);
-    return;
+    throw new Error(
+      `No chart element found for selector ${renderOpts.selector}`,
+    );
   }
 
   if (isStorybookActive) {
