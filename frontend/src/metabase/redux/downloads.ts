@@ -20,13 +20,13 @@ import { isWithinIframe } from "metabase/utils/iframe";
 import { isJWT } from "metabase/utils/jwt";
 import { checkNotNull } from "metabase/utils/types";
 import { isUuid } from "metabase/utils/uuid";
+import { resolveChartImageSelector } from "metabase/visualizations/lib/chart-dom-selectors";
 import { saveChartImage } from "metabase/visualizations/lib/save-chart-image";
 import {
   DASHBOARD_HEADER_PARAMETERS_PDF_EXPORT_NODE_ID,
   DASHBOARD_PDF_EXPORT_ROOT_ID,
   saveDashboardPdf,
 } from "metabase/visualizations/lib/save-dashboard-pdf";
-import { getCardKey } from "metabase/viz-core";
 import type Question from "metabase-lib/v1/Question";
 import type {
   DashCardId,
@@ -168,10 +168,10 @@ export const downloadToImage = createAsyncThunk(
     const includeBranding = !isWhitelabeled;
     const fileName = getChartFileName(question, includeBranding);
 
-    const chartSelector =
-      dashcardId != null
-        ? `[data-dashcard-key='${dashcardId}']`
-        : `[data-card-key='${getCardKey(question.id())}']`;
+    const chartSelector = resolveChartImageSelector({
+      dashcardId,
+      cardId: question.id(),
+    });
 
     // Long-running main thread blocking operation incoming; wait until the loader is painted.
     await waitUntilNextFramePainted();
