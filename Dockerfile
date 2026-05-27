@@ -32,7 +32,8 @@ RUN npm install -g bun
 # install frontend dependencies
 RUN bun install --frozen-lockfile
 
-RUN INTERACTIVE=false CI=true MB_EDITION=$MB_EDITION bin/build.sh :version ${VERSION}
+# Pass :version as an EDN string; an unquoted 0.57.19 is not valid EDN (Unreadable arg).
+RUN INTERACTIVE=false CI=true MB_EDITION=$MB_EDITION bin/build.sh :version "\"${VERSION}\""
 
 # ###################
 # # STAGE 2: runner
