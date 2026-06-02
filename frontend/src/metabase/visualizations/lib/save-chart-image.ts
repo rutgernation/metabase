@@ -25,8 +25,7 @@ export const saveChartImage = async ({
   const node = document.querySelector(selector);
 
   if (!node || !(node instanceof HTMLElement)) {
-    console.warn("No node found for selector", selector);
-    return;
+    throw new Error(`No chart element found for selector ${selector}`);
   }
 
   const contentHeight = node.getBoundingClientRect().height;
@@ -85,17 +84,21 @@ export const saveChartImage = async ({
       openImageBlobOnStorybook({ canvas, blob });
     }
   } else {
-    canvas.toBlob((blob) => {
-      if (blob) {
-        const link = document.createElement("a");
-        const url = URL.createObjectURL(blob);
-        link.rel = "noopener";
-        link.download = fileName;
-        link.href = url;
-        link.click();
-        link.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 60_000);
-      }
-    });
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve),
+    );
+
+    if (!blob) {
+      throw new Error("Failed to generate PNG image");
+    }
+
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.rel = "noopener";
+    link.download = fileName;
+    link.href = url;
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60_000);
   }
 };

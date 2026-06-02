@@ -8,7 +8,9 @@ import { isStorybookActive } from "metabase/env";
 import { utf8_to_b64 } from "metabase/utils/encoding";
 import { openImageBlobOnStorybook } from "metabase/utils/loki-utils";
 
-import { getCardKey } from "./utils";
+import { getChartSelector } from "./chart-dom-selectors";
+
+export { getChartSelector, resolveChartImageSelector } from "./chart-dom-selectors";
 
 export const SAVING_DOM_IMAGE_CLASS = "saving-dom-image";
 export const SAVING_DOM_IMAGE_HIDDEN_CLASS = "saving-dom-image-hidden";
@@ -204,16 +206,6 @@ export const getVisualizationSvgDataUri = (
 
   const svgString = new XMLSerializer().serializeToString(element);
   return `data:image/svg+xml;base64,${utf8_to_b64(svgString)}`;
-};
-
-export const getChartSelector = (
-  input: { dashcardId: number | undefined } | { cardId: number | undefined },
-) => {
-  if ("dashcardId" in input) {
-    return `[data-dashcard-key='${input.dashcardId}']`;
-  } else {
-    return `[data-card-key='${getCardKey(input.cardId)}']`;
-  }
 };
 
 export const getChartSvgSelector = (
